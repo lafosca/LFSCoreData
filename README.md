@@ -2,6 +2,7 @@
 
 [![Version](http://cocoapod-badges.herokuapp.com/v/LFSCoreData/badge.png)](http://cocoadocs.org/docsets/LFSCoreData)
 [![Platform](http://cocoapod-badges.herokuapp.com/p/LFSCoreData/badge.png)](http://cocoadocs.org/docsets/LFSCoreData)
+[![Build Status](https://travis-ci.org/lafosca/LFSCoreData.png?branch=master)](https://travis-ci.org/lafosca/LFSCoreData)
 
 ## Description
 
