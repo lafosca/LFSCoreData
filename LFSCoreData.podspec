@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author       = { "David Cortés" => "david@lafosca.cat" }
    s.license      = { :type => 'All rights reserved'}
   s.source       = { 
-    :git => "https://github.com/lafosca/LFCoreData.git", 
+    :git => "https://github.com/lafosca/LFSCoreData.git", 
     :tag => "1.0.0"
   }
 
