@@ -84,11 +84,10 @@
     
     NSDictionary *relationships = [activityEntity relationshipsByName];
     
-    __block id relationObject = nil;
     id relationshipArrayOfDictionaries;
     
-    
     for (NSString *relationship in relationships) {
+        id relationObject = nil;
         NSString *entityName = [[[relationships objectForKey:relationship] destinationEntity] name];
         NSAttributeDescription *relationshipInfo = [relationships objectForKey:relationship];
         id relationshipID = [self identifierForRelationshipInfo:relationshipInfo];
