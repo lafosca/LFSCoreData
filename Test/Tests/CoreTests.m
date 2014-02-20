@@ -40,6 +40,25 @@ context(@"LFCoreData", ^{
         [[expectFutureValue(theValue(count)) shouldEventuallyBeforeTimingOutAfter(3.0)] equal:theValue(1)];
     });
 
+    it(@"should delete all objects of a given datamodel", ^{
+        NSDictionary *firstTweet = @{
+                                     @"text" : @"Lorem ipsum dolor",
+                                     @"id" : @1234568987
+                                     };
+        NSDictionary *secondTweet = @{
+                                     @"text" : @"Lorem ipsum dolor",
+                                     @"id" : @1234568988
+                                     };
+        
+        [Tweet importFromArray:@[firstTweet, secondTweet] inContext:[[LFSDataModel sharedModel] mainContext]];
+        
+        [Tweet deleteAllObjects];
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:[Tweet entityName]];
+        NSUInteger count = [[[LFSDataModel sharedModel] mainContext] countForFetchRequest:request error:nil];
+        [[theValue(count) should] equal:theValue(0)];
+        
+    });
 });
 
 SPEC_END
