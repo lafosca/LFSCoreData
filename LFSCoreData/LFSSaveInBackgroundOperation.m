@@ -66,7 +66,7 @@
     
     //Completion block in main thread
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.completion();
+        if (self.completion) self.completion();
     });
 }
 

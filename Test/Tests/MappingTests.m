@@ -301,6 +301,29 @@ context(@"LFCoreData", ^{
             [fetchforDeletedObject setPredicate:[NSPredicate predicateWithFormat:@"tweetID = %@", @1234568984]];
             NSUInteger count = [[[LFSDataModel sharedModel] mainContext] countForFetchRequest:fetchforDeletedObject error:nil];
             [[theValue(count) should] equal:theValue(0)];
+        it(@"should work with nil completion", ^{
+            [LFSSaveInBackgroundOperation saveInBackgroundWithBlock:^(NSManagedObjectContext *backgroundContext) {
+                NSDictionary *firstTweet = @{
+                                             @"text" : @"Lorem ipsum dolor",
+                                             @"created_at" : @"Fri, 15 Feb 2013 10:45:15 +0000",
+                                             @"user_id" : @124,
+                                             @"id" : @1234568985
+                                             };
+                NSDictionary *secondTweet = @{
+                                              @"text" : @"Lorem ipsum dolor",
+                                              @"created_at" : @"Fri, 15 Feb 2013 10:45:15 +0000",
+                                              @"user_id" : @124,
+                                              @"id" : @1234568984
+                                              };
+                NSDictionary *user = @{
+                                       @"id" : @124,
+                                       @"name" : @"lafosca",
+                                       @"screen_name" : @"lafosca",
+                                       @"tweets" : @[firstTweet,secondTweet]
+                                       };
+                
+                [User importObject:user inContext:backgroundContext];
+            } completion:nil];
         });
     });
 });
