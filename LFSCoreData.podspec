@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "LFSCoreData"
-  s.version      = "1.0.1"
+  s.version      = "1.0.2"
   s.summary      = "Core Data Wrapper for building core data transparent to developer."
   s.homepage     = "https://github.com/lafosca/LFCoreData"
 
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
    s.license      = { :type => 'All rights reserved'}
   s.source       = { 
     :git => "https://github.com/lafosca/LFSCoreData.git", 
-    :tag => "1.0.1"
+    :tag => "1.0.2"
   }
 
   s.platform     = :ios, '5.0'
