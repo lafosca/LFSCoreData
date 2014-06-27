@@ -48,5 +48,9 @@
 + (void) saveInBackgroundWithBlock:(void (^)(NSManagedObjectContext *backgroundContext))backgroundOperationsBlock
                       completion:(void(^)())completion;
 
++ (void) saveInBackgroundWithBlock:(void (^)(NSManagedObjectContext *backgroundContext))backgroundOperationsBlock
+                        completion:(void(^)())completion
+                           failure:(void(^)(NSError *error))error;
+
 
 @end
