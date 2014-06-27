@@ -24,7 +24,7 @@
 
 #import "AFJSONRequestOperation.h"
 
-static NSString * const kAFAppDotNetAPIBaseURLString = @"https://alpha-api.app.net/";
+static NSString * const kAFAppDotNetAPIBaseURLString = @"http://alpha-api.app.net/";
 
 @implementation AFAppDotNetAPIClient
 

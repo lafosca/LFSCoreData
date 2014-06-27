@@ -32,7 +32,7 @@ Podfile
 
 Before starting using LFSCoreData you should read this patterns, and create your entities in xcdatamodel:
 
-[Setup your project using LFCoreDataPatterns](https://github.com/lafosca/LFCoreData/wiki/Setup-your-entities-using-LFSCoreData-patterns)	
+[Setup your project using LFCoreDataPatterns](https://github.com/lafosca/LFSCoreData/wiki/Setup-your-entities-using-LFSCoreData-patterns)	
 
 ## Usage
 

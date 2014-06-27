@@ -25,4 +25,5 @@
 
 #import "LFSDataModel.h"
 #import "NSManagedObject+Mapping.h"
+#import "NSManagedObject+LFSCoreData.h"
 #import "LFSSaveInBackgroundOperation.h"
