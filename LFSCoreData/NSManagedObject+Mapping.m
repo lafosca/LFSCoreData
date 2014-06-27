@@ -360,6 +360,31 @@
     
 }
 
++ (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context deleteOtherObjects:(BOOL)deleteOther {
+    NSArray *importResultObjects = [self importFromArray:objects inContext:context];
+    
+    NSString *entityName = NSStringFromClass(self);
+    NSFetchRequest *allEventsRequest = [[NSFetchRequest alloc] initWithEntityName:entityName];
+    NSString *identifierName = [NSManagedObject identifierForEntityName:entityName];
+    
+    NSArray *identifiers = [importResultObjects valueForKey:identifierName];
+    
+    [allEventsRequest setPredicate:[NSPredicate predicateWithFormat:@"NOT (%@ IN %@)",entityName,identifiers]];
+    [allEventsRequest setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    [allEventsRequest setIncludesPendingChanges:NO];
+    
+    NSError *error = nil;
+    NSArray *events = [context executeFetchRequest:allEventsRequest error:&error];
+    if (error){
+        NSLog(@"ERROR on fetch request %@",error);
+    }
+    for (NSManagedObject *event in events) {
+        [context deleteObject:event];
+    }
+    
+    return importResultObjects;
+}
+
 + (NSString*)idStringForEntityName:(NSString*)entityName inContext:(NSManagedObjectContext*)context{
     NSEntityDescription *activityEntity = [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
     

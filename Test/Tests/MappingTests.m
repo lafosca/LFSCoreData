@@ -276,6 +276,31 @@ context(@"LFCoreData", ^{
             [[expectFutureValue(theValue(user.tweets.count)) shouldEventuallyBeforeTimingOutAfter(3.0)] equal:theValue(2)];
         });
         
+        it(@"should delete old objects when importing from arra, if needed", ^{
+            NSDictionary *firstTweet = @{
+                                         @"text" : @"Lorem ipsum dolor 1",
+                                         @"id" : @1234568985
+                                         };
+            NSDictionary *secondTweet = @{
+                                          @"text" : @"Lorem ipsum dolor 2",
+                                          @"id" : @1234568984
+                                          };
+            
+            [Tweet importFromArray:@[firstTweet, secondTweet] inContext:[[LFSDataModel sharedModel] mainContext]];
+           
+            NSDictionary *twirdTweet = @{
+                                          @"text" : @"Lorem ipsum dolor 3",
+                                          @"id" : @1234568983
+                                          };
+            
+            [Tweet importFromArray:@[firstTweet, twirdTweet]
+                                            inContext:[[LFSDataModel sharedModel] mainContext]
+                                   deleteOtherObjects:YES];
+            
+            NSFetchRequest *fetchforDeletedObject = [[NSFetchRequest alloc] initWithEntityName:[Tweet entityName]];
+            [fetchforDeletedObject setPredicate:[NSPredicate predicateWithFormat:@"tweetID = %@", @1234568984]];
+            NSUInteger count = [[[LFSDataModel sharedModel] mainContext] countForFetchRequest:fetchforDeletedObject error:nil];
+            [[theValue(count) should] equal:theValue(0)];
         it(@"should work with nil completion", ^{
             [LFSSaveInBackgroundOperation saveInBackgroundWithBlock:^(NSManagedObjectContext *backgroundContext) {
                 NSDictionary *firstTweet = @{

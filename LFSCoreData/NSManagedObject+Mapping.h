@@ -70,6 +70,17 @@
  */
 + (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context;
 
+
+/**
+ Import objects from an array. See `importObject:inContext:` to see more details.
+ 
+ @param objects Import objects in an array using `importObject:inContext:` method.
+ @param context Context that will save the objects
+ @param deleteOther When YES will erase of the database all the objects not contained in the array
+ 
+ */
++ (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context deleteOtherObjects:(BOOL)deleteOther;
+
 ///---------------------------------------------
 /// @name Mapping dictionaries to NSManagedObjects
 ///---------------------------------------------
