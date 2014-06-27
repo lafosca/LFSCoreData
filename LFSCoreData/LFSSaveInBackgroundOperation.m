@@ -62,6 +62,7 @@
     if (error){
         NSLog(@"ERROR saving background context %@",error);
     }
+    
     [[LFSDataModel sharedModel] saveContext];
     
     //Completion block in main thread

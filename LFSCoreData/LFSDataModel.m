@@ -73,7 +73,7 @@
     _mainContext = nil;
     NSError *error;
     NSURL *storeURL = [NSURL fileURLWithPath:[self pathToLocalStore]];
-    [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
+    [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
     [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:[[NSBundle mainBundle] bundleIdentifier]];
     self.test = NO;
 }
@@ -183,34 +183,30 @@
     return _persistentStoreCoordinator;
 }
 
-- (void)saveContext
-{
-    [self saveContext:NO];
+- (void)saveContext{
+    [self saveContext:NO error:nil];
+}
+- (void)saveContext:(NSError **)error{
+    [self saveContext:NO error:error];
 }
 
-- (void)saveContextAndWait
-{
-    [self saveContext:YES];
+-(void)saveContextAndWait{
+    [self saveContext:YES error:nil];
+}
+-(void)saveContextAndWaitWithError:(NSError **)error{
+    [self saveContext:YES error:error];
 }
 
-- (void)saveContext:(BOOL)wait
+- (void)saveContext:(BOOL)wait error:(NSError **)error
 {
     if ([[self mainContext] hasChanges]){
         [[self mainContext] performBlockAndWait:^{
-            NSError *error;
-            [[self mainContext] save:&error];
-            if (error){
-                NSLog(@"Error saving main context %@",error);
-            }
+            [[self mainContext] save:error];
         }];
     }
     
     void (^savePrivate)() = ^{
-        NSError *error;
-        [[self privateContext] save:&error];
-        if (error){
-            NSLog(@"Error saving changes to disk %@",error);
-        }
+        [[self privateContext] save:error];
     };
     
     if ([[self privateContext] hasChanges]){
