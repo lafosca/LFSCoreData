@@ -301,6 +301,8 @@ context(@"LFCoreData", ^{
             [fetchforDeletedObject setPredicate:[NSPredicate predicateWithFormat:@"tweetID = %@", @1234568984]];
             NSUInteger count = [[[LFSDataModel sharedModel] mainContext] countForFetchRequest:fetchforDeletedObject error:nil];
             [[theValue(count) should] equal:theValue(0)];
+        });
+        
         it(@"should work with nil completion", ^{
             [LFSSaveInBackgroundOperation saveInBackgroundWithBlock:^(NSManagedObjectContext *backgroundContext) {
                 NSDictionary *firstTweet = @{
