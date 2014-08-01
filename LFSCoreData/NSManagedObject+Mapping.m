@@ -53,6 +53,8 @@
                     
                     if (format){
                         date = [NSDate dateFromString:value format:format];
+                    } else if( [value isKindOfClass:[NSNumber class]]) {
+                        date = [NSDate dateWithTimeIntervalSince1970:[value intValue]];
                     } else {
                         date = [NSDate dateFromString:value];
                     }

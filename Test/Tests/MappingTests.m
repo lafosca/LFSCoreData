@@ -205,6 +205,22 @@ context(@"LFCoreData", ^{
 
             
         });
+        
+        it(@"should map dates as timestamps", ^{
+            NSDictionary *firstTweet = @{
+                                         @"text" : @"Lorem ipsum dolor",
+                                         @"created_at" : @543632461,
+                                         @"retweeters" : @[@"123", @"124"],
+                                         @"id" : @1234568988
+                                         };
+            
+            Tweet *tweet = [Tweet importObject:firstTweet inContext:[[LFSDataModel sharedModel] mainContext]];
+            
+            NSDate *date = [NSDate dateFromString:@"Wed, 25 Mar 1987 01:01:01 +0000"];
+            
+            [[[tweet created_at] should] equal:date];
+        });
+        
         it(@"should map relationships by identifiers", ^{
             __block Tweet *tweet;
             
@@ -301,8 +317,7 @@ context(@"LFCoreData", ^{
             [fetchforDeletedObject setPredicate:[NSPredicate predicateWithFormat:@"tweetID = %@", @1234568984]];
             NSUInteger count = [[[LFSDataModel sharedModel] mainContext] countForFetchRequest:fetchforDeletedObject error:nil];
             [[theValue(count) should] equal:theValue(0)];
-        });
-        
+      });
         it(@"should work with nil completion", ^{
             [LFSSaveInBackgroundOperation saveInBackgroundWithBlock:^(NSManagedObjectContext *backgroundContext) {
                 NSDictionary *firstTweet = @{
@@ -327,6 +342,8 @@ context(@"LFCoreData", ^{
                 [User importObject:user inContext:backgroundContext];
             } completion:nil];
         });
+        
+        
     });
 });
 
