@@ -28,6 +28,7 @@
 
 @property (nonatomic, copy) void(^backgroundOperationsBlock)(NSManagedObjectContext *backgroundContext);
 @property (nonatomic, copy) void(^completion)();
+@property (nonatomic, copy) void(^failure)(NSError *error);
 
 @end
 
@@ -36,6 +37,17 @@
 - (void) enqueue
 {
     [[LFSDataModel sharedModel] addBackgroundOperation:self];
+}
+
++ (void) saveInBackgroundWithBlock:(void (^)(NSManagedObjectContext *backgroundContext))backgroundOperationsBlock
+                        completion:(void(^)())completion
+                           failure:(void(^)(NSError *error))failure {
+    
+    LFSSaveInBackgroundOperation *saveOperation = [[LFSSaveInBackgroundOperation alloc] init];
+    saveOperation.backgroundOperationsBlock = backgroundOperationsBlock;
+    saveOperation.completion = completion;
+    saveOperation.failure = failure;
+    [saveOperation enqueue];
 }
 
 + (void) saveInBackgroundWithBlock:(void (^)(NSManagedObjectContext *backgroundContext))backgroundOperationsBlock
@@ -57,11 +69,12 @@
     self.backgroundOperationsBlock(backgroundContext);
     
     //Save
-    NSError *error;
+    NSError *error = [[NSError alloc] init];
     [backgroundContext save:&error];
     if (error){
-        NSLog(@"ERROR saving background context %@",error);
+        if (self.failure) self.failure(error);
     }
+    
     [[LFSDataModel sharedModel] saveContext];
     
     //Completion block in main thread
