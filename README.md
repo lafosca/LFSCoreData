@@ -114,6 +114,24 @@ Before starting using LFSCoreData you should read this patterns, and create your
     
 	…
 
+## Sync objects from array
+
+This way you can delete all the elements in the database of the importing entity, except the ones you are importing now.
+
+Can be useful when using LFSCoreData as a cache of your data and this data is volatile.
+
+The usage is like this:
+
+    [Tweet importFromArray:yourArrayOfNewObjects
+                 inContext:[[LFSDataModel sharedModel] mainContext]
+        deleteOtherObjects:YES];
+
+## Delete all objects of an entity
+
+Now you can delete all objects for an specific entity like this:
+
+    [Tweet deleteAllObjects];
+    
 ## Author
 
 LAFOSCA STUDIO S.L.

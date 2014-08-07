@@ -53,6 +53,8 @@
                     
                     if (format){
                         date = [NSDate dateFromString:value format:format];
+                    } else if( [value isKindOfClass:[NSNumber class]]) {
+                        date = [NSDate dateWithTimeIntervalSince1970:[value intValue]];
                     } else {
                         date = [NSDate dateFromString:value];
                     }
@@ -121,14 +123,14 @@
         } else if ([self isFullSingleRelationshipWithDictionary:dictionary andRelationshipName:relationship]) {
             NSDictionary *relationshipDictionary = [dictionary objectForKey:relationship];;
             if (relationshipDictionary){
-                relationObject = [[self class] importObject:relationshipDictionary inContext:moc inObject:nil mapRelationships:YES forEntityName:entityName];
+                relationObject = [[self class] importObject:relationshipDictionary inContext:moc inObject:nil mapRelationships:YES forEntityName:entityName forceInsert:NO];
             }
             
         } else if ([self isFullMultipleRelationshipWithDictinary:dictionary andRelationshipName:relationship]) {
             relationshipArrayOfDictionaries = [dictionary objectForKey:relationship];
             for (NSDictionary *relationshipDictionary in relationshipArrayOfDictionaries) {
                 if (relationshipDictionary){
-                    id relationSingleObject = [[self class] importObject:relationshipDictionary inContext:moc inObject:nil mapRelationships:YES forEntityName:entityName];
+                    id relationSingleObject = [[self class] importObject:relationshipDictionary inContext:moc inObject:nil mapRelationships:YES forEntityName:entityName forceInsert:NO];
                     NSMutableSet *relationshipset = [NSMutableSet setWithSet:[self valueForKey:relationship]];
                     [relationshipset addObject:relationSingleObject];
                     relationObject = [NSSet setWithSet:relationshipset];
@@ -270,15 +272,18 @@
     return [moc executeFetchRequest:fetchRequest error:nil];
 }
 
-+ (id)importObject:(NSDictionary *)attributes inContext:(NSManagedObjectContext *)context
++ (id)importObject:(NSDictionary *)attributes inContext:(NSManagedObjectContext *)context{
+    return [self importObject:attributes inContext:context forceInsert:NO];
+}
++ (id)importObject:(NSDictionary *)attributes inContext:(NSManagedObjectContext *)context forceInsert:(BOOL)forceInsert
 {
-    return [self importObject:attributes inContext:context inObject:nil];
+    return [self importObject:attributes inContext:context inObject:nil forceInsert:forceInsert];
 }
 
-+ (id) importObject:(NSDictionary *)attributes inContext:(NSManagedObjectContext *)context inObject:(id)objectInDatabase
++ (id) importObject:(NSDictionary *)attributes inContext:(NSManagedObjectContext *)context inObject:(id)objectInDatabase forceInsert:(BOOL)forceInsert
 {
     NSString *entityName = NSStringFromClass(self);
-    return [self importObject:attributes inContext:context inObject:objectInDatabase mapRelationships:YES forEntityName:entityName];
+    return [self importObject:attributes inContext:context inObject:objectInDatabase mapRelationships:YES forEntityName:entityName forceInsert:forceInsert];
 }
 
 + (id) importObject:(NSDictionary *)attributes
@@ -286,6 +291,7 @@
            inObject:(id)objectInDatabase
    mapRelationships:(BOOL)mapRelationships
       forEntityName:(NSString *)entityName
+        forceInsert:(BOOL)forceInsert
 {
     NSString* idString = [self idStringForEntityName:entityName
                                            inContext:context];
@@ -293,14 +299,18 @@
     id object;
     // TODO: Check if ID is the correct way to get the object.
     
-    if (!objectInDatabase){
-        object = [NSManagedObject objectForIdentifier:attributes[idString] inManagedObjectContext:context forEntityName:entityName];
-        
-        if (!object){
-            object = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:context];
-        }
+    if (forceInsert){
+        object = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:context];
     } else {
-        object = objectInDatabase;
+        if (!objectInDatabase){
+            object = [NSManagedObject objectForIdentifier:attributes[idString] inManagedObjectContext:context forEntityName:entityName];
+            
+            if (!object){
+                object = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:context];
+            }
+        } else {
+            object = objectInDatabase;
+        }
     }
     
     [object mapAttributtes:attributes inContext:context forEntityName:entityName];
@@ -308,51 +318,16 @@
     
     return object;
 }
++ (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context{
+    return [self importFromArray:objects inContext:context forceInsert:NO];
+}
 
-+ (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context
++ (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context forceInsert:(BOOL)forceInsert
 {
-//    NSString* idString = [self idStringForEntityName:entityName
-//                                           inContext:context];
-    
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
-//    NSArray *ids = [objects valueForKey:idString];
-    
-//    NSArray *objectsInDatabase;
-//    NSMutableArray *idsInStrings = nil;
-//    
-//    
-//    if ([ids count] > 0 && [[ids objectAtIndex:0] isKindOfClass:[NSString class]]){
-//        
-//        idsInStrings = [[NSMutableArray alloc] init];
-//        
-//        for (id identifier in ids) {
-//            [idsInStrings addObject:[identifier description]];
-//        }
-//        
-//        objectsInDatabase = [self objectsForIdentifiers:idsInStrings inContext:context];
-//        
-//    } else {
-//        objectsInDatabase = [self objectsForIdentifiers:ids inContext:context];
-//    }
-    
     for (NSDictionary *object in objects) {
-//        id objectInDatabase;
-//        
-//        NSArray *objectArray;
-//        if (idsInStrings){
-//            objectArray = [objectsInDatabase filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(SELF.%@ == %@)",[self identifierForEntityName:[self entityName]] ,[object[@"id"]description]]];
-//        } else {
-//            objectArray = [objectsInDatabase filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(SELF.%@ == %@)",[self identifierForEntityName:[self entityName]] ,object[@"id"]]];
-//        }
-//        
-//        if (objectArray.count > 0){
-//            objectInDatabase = objectArray[0];
-//        } else {
-//            objectInDatabase = [NSEntityDescription insertNewObjectForEntityForName:[self entityName] inManagedObjectContext:context];
-//        }
-//        
-        [results addObject:[self importObject:object inContext:context]];
+        [results addObject:[self importObject:object inContext:context forceInsert:(BOOL)forceInsert]];
     }
     
     return results;

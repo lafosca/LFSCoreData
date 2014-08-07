@@ -87,15 +87,16 @@ Background thread context
  Save all contexts asynchronously. Use this when you update UI.
  
  */
-- (void)saveContext;
+- (void)saveContext __attribute__ ((deprecated));
+- (void)saveContext:(NSError **)error;
 
 /**
  Save all context syncronously. Use this when you are about to quit the application.
  
  */
-- (void)saveContextAndWait;
 
-
+- (void)saveContextAndWaitWithError:(NSError **)error;
+- (void)saveContextAndWait __attribute__ ((deprecated));
 /**
  Remove Sqlite file from the application
  
