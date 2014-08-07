@@ -5,6 +5,6 @@ branches:
 notifications:
   email: false
 before_install: gem install xcpretty cocoapods && cd Test/ && pod install
-script: xcodebuild -sdk iphonesimulator -workspace "LFSCoreData Tests.xcworkspace" -scheme
+script: set -o pipefail && xcodebuild -sdk iphonesimulator -workspace "LFSCoreData Tests.xcworkspace" -scheme
   Test -configuration Debug  RUN_APPLICATION_TESTS_WITH_IOS_SIM=YES  ONLY_ACTIVE_ARCH=YES
   test | xcpretty --color
