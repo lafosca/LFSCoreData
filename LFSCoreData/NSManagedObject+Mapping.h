@@ -60,7 +60,7 @@
  */
 
 + (id)importObject:(NSDictionary *)attributes inContext:(NSManagedObjectContext *)context;
-
++ (id)importObject:(NSDictionary *)attributes inContext:(NSManagedObjectContext *)context forceInsert:(BOOL)forceInsert;
 /**
  Import objects from an array. See `importObject:inContext:` to see more details.
  
@@ -69,6 +69,7 @@
  
  */
 + (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context;
++ (NSArray *)importFromArray:(NSArray *)objects inContext:(NSManagedObjectContext *)context forceInsert:(BOOL)forceInsert;
 
 
 /**
