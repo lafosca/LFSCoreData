@@ -343,7 +343,7 @@
     
     NSArray *identifiers = [importResultObjects valueForKey:identifierName];
     
-    [allEventsRequest setPredicate:[NSPredicate predicateWithFormat:@"NOT (%@ IN %@)",entityName,identifiers]];
+    [allEventsRequest setPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF.%@ IN %@)",identifierName,identifiers]];
     [allEventsRequest setIncludesPropertyValues:NO]; //only fetch the managedObjectID
     [allEventsRequest setIncludesPendingChanges:NO];
     
