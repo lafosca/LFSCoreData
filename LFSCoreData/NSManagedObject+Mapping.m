@@ -151,7 +151,7 @@
 - (NSString *)identifierForRelationshipInfo:(NSAttributeDescription *)relationshipInfo
 {
     NSString *keyPath = [[relationshipInfo userInfo] objectForKey:@"mappingPath"];
-    NSString *key = [NSString stringWithFormat:@"%@_id",relationshipInfo.name];
+    NSString *key = [NSString stringWithFormat:@"%@ID",relationshipInfo.name];
     if (keyPath){
         key = keyPath;
     }
@@ -362,7 +362,7 @@
 + (NSString*)idStringForEntityName:(NSString*)entityName inContext:(NSManagedObjectContext*)context{
     NSEntityDescription *activityEntity = [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
     
-    NSString *IDString = [[[[activityEntity attributesByName] valueForKey:[NSString stringWithFormat:@"%@_ID", [entityName lowercaseString]]] userInfo] objectForKey:@"mappingPath"];
+    NSString *IDString = [[[[activityEntity attributesByName] valueForKey:[NSString stringWithFormat:@"%@ID", [entityName lowercaseString]]] userInfo] objectForKey:@"mappingPath"];
     
     if (!IDString) {
         IDString = @"id";
