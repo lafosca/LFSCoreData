@@ -1,4 +1,4 @@
-//
+
 //  NSManagedObject+Mapping.m
 //
 //  Copyright (c) 2014 LAFOSCA STUDIO S.L.
@@ -218,11 +218,11 @@
 
 + (NSString *) identifierClassInContext:(NSManagedObjectContext *)context
 {
-    NSEntityDescription *activityEntity = [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:context];
-    
-    NSDictionary *attributes = [activityEntity attributesByName];
-    
-    NSAttributeDescription *attribute = [attributes objectForKey:[self identifierForEntityName:[self entityName]]];
+//    NSEntityDescription *activityEntity = [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:context];
+//    
+//    NSDictionary *attributes = [activityEntity attributesByName];
+//    
+//    NSAttributeDescription *attribute = [attributes objectForKey:[self identifierForEntityName:[self entityName]]];
     
     return @"NSString";
 }
