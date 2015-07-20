@@ -303,7 +303,7 @@
         object = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:context];
     } else {
         if (!objectInDatabase){
-            object = [NSManagedObject objectForIdentifier:attributes[idString] inManagedObjectContext:context forEntityName:entityName];
+            object = [NSManagedObject objectForIdentifier:[attributes valueForKeyPath:idString] inManagedObjectContext:context forEntityName:entityName];
             
             if (!object){
                 object = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:context];
