@@ -21,7 +21,7 @@ To run the example project; clone the repo, and run `pod install` from the Proje
 
 ## Get Started
 
-### Install LFSCoreData using Cocoapods
+### Install LFSCoreData using CocoaPods
 
 Podfile
 
